@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/activity_horizontal_margin"
+    tools:context=".MainActivity">
+
+    <!--<ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:ignore="MissingConstraints">-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:ignore="MissingConstraints"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/monitortextview"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Monitoring ">
+
+            </TextView>
+            <Switch
+                android:id="@+id/monitorswitch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:ignore="MissingConstraints">
+            </Switch>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            tools:ignore="MissingConstraints"
+            android:layout_marginRight="@dimen/activity_horizontal_margin">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Total App  ">
+
+            </TextView>
+            <TextView
+                android:id="@+id/textview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            </TextView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/cpubutton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="CPU"
+                android:layout_marginRight="@dimen/activity_horizontal_margin">
+
+            </Button>
+            <Button
+                android:id="@+id/rambutton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="MEMORY">
+
+            </Button>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/netbutton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Network"
+                android:layout_marginRight="@dimen/activity_horizontal_margin">
+
+            </Button>
+            <Button
+                android:id="@+id/bgprocessbutton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Process Manager">
+
+            </Button>
+        </LinearLayout>
+    </LinearLayout>
+
+    <!--</ScrollView>-->
+
+    <!--<LinearLayout
+        android:id="@+id/totalApp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:ignore="MissingConstraints"
+        android:orientation="horizontal">
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:elevation="@dimen/cardview_compat_inset_shadow"
+            app:cardBackgroundColor="@color/cardview_dark_background">
+            <TextView
+                android:id="@+id/textview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="@color/white"
+                android:textAlignment="center"/>
+        </com.google.android.material.card.MaterialCardView>
+       &lt;!&ndash; <TextView
+            android:id="@+id/textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"/>&ndash;&gt;
+            &lt;!&ndash;app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"&ndash;&gt; />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/cpuL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:ignore="MissingConstraints"
+        android:orientation="horizontal">
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:elevation="@dimen/cardview_compat_inset_shadow"
+            app:cardBackgroundColor="@color/material_on_background_emphasis_medium">
+
+        </com.google.android.material.card.MaterialCardView>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/ramL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:ignore="MissingConstraints"
+        android:orientation="horizontal">
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/NBL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:ignore="MissingConstraints"
+        android:orientation="horizontal">
+        <LinearLayout
+            android:id="@+id/netL"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            tools:ignore="UselessLeaf"
+            android:orientation="vertical">
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/batteryL"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+
+            tools:ignore="UselessLeaf"
+            android:orientation="vertical">
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:ignore="MissingConstraints">
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:ignore="MissingConstraints">
+    </LinearLayout>-->
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
