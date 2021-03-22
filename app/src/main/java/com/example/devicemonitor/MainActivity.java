@@ -1,6 +1,7 @@
 package com.example.devicemonitor;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
 import android.app.ApplicationErrorReport;
 import android.content.Context;
@@ -29,10 +30,10 @@ public class MainActivity extends AppCompatActivity {
         TextView totalApp =findViewById(R.id.textview);
         totalApp.setText(String.valueOf(getNumberOfTotalApp()));
 
-        Button cpubutton = findViewById(R.id.cpubutton);
-        Button memorybutton = findViewById(R.id.rambutton);
-        Button netbutton = findViewById(R.id.netbutton);
-        Button processbutton = findViewById(R.id.bgprocessbutton);
+        CardView cpubutton = findViewById(R.id.cpubutton);
+        CardView memorybutton = findViewById(R.id.membutton);
+        CardView netbutton = findViewById(R.id.networkbutton);
+        //CardView processbutton = findViewById(R.id.bgprocessbutton);
 
         Intent intentcpu = new Intent(this, CpuActivity.class);
         Intent intentmem = new Intent(this, RamActivity.class);
@@ -60,12 +61,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        processbutton.setOnClickListener(new View.OnClickListener() {
+        /*processbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(intentprocess);
             }
-        });
+        });*/
 
     }
     private int getNumberOfTotalApp(){
@@ -80,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
         List<ApplicationInfo> applist = getPackageManager().getInstalledApplications(0);
         for (ApplicationInfo app : applist){
             int flag = app.flags;
+
             if ((flag == ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) || (flag == ApplicationInfo.FLAG_SYSTEM)){
                 totalSystemApp++;
             }else totalUserInstalledApp++;

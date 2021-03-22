@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CpuUsageInfo;
 import android.widget.TextView;
 
 import java.io.BufferedReader;
@@ -25,6 +26,7 @@ public class CpuActivity extends AppCompatActivity {
     private String getCpuInfo(){
         StringBuffer sb = new StringBuffer();
         sb.append("abi: ").append(Build.CPU_ABI).append("\n");
+        //sb.append(Build.SUPPORTED_ABIS);
         if (new File("/proc/cpuinfo").exists()) {
             try {
                 BufferedReader br = new BufferedReader(
@@ -42,4 +44,9 @@ public class CpuActivity extends AppCompatActivity {
         }
         return sb.toString();
     }
+
+    /*private CpuUsageInfo getCpuUsageInfo(){
+
+
+    }*/
 }
