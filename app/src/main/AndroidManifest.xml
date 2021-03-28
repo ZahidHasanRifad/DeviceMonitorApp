@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.devicemonitor">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.BIND_DEVICE_ADMIN"
+        tools:ignore="ProtectedPermissions" />
+
     <!--
 <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
     <uses-permission android:name="android.permission.GET_TASKS" />
@@ -24,6 +28,10 @@
         <activity android:name=".NetActivity" />
         <activity android:name=".RamActivity" />
         <activity android:name=".CpuActivity" />
+
+        <service android:name=".bgservice.MonitoringService1"
+                 android:exported="false"/>
+
         <!--
         <uses-library
             android:name="com.google.android.wearable"

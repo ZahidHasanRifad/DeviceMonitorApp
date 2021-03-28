@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CpuUsageInfo;
+import android.os.HardwarePropertiesManager;
 import android.widget.TextView;
 
 import java.io.BufferedReader;
@@ -21,6 +22,7 @@ public class CpuActivity extends AppCompatActivity {
 
         TextView cpuinfo = findViewById(R.id.cpuInfo);
         cpuinfo.setText(getCpuInfo());
+        //cpuinfo.setText(getCpuUsageInfo());
     }
 
     private String getCpuInfo(){
@@ -45,8 +47,17 @@ public class CpuActivity extends AppCompatActivity {
         return sb.toString();
     }
 
-    /*private CpuUsageInfo getCpuUsageInfo(){
+    private String getCpuUsageInfo(){
 
+        StringBuffer stringBuffer = new StringBuffer();
 
-    }*/
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            HardwarePropertiesManager hardwarePropertiesManager = (HardwarePropertiesManager) getSystemService(HARDWARE_PROPERTIES_SERVICE);
+            CpuUsageInfo[] cpuUsageInfo = hardwarePropertiesManager.getCpuUsages();
+            for (int i=0; i<cpuUsageInfo.length; i++){
+                stringBuffer.append(String.valueOf(cpuUsageInfo[i].getActive()));
+            }
+        }
+        return stringBuffer.toString();
+    }
 }

@@ -32,12 +32,8 @@ public class ProcessActivity extends AppCompatActivity{
 
     private int getBgTotalApps(){
 
-        //ActivityManager am = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
         ActivityManager am = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
         List<ActivityManager.AppTask> runningAppProcessInfo = am.getAppTasks();
-        /*JobScheduler jobScheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
-        List<JobInfo> alljobs = jobScheduler.getAllPendingJobs();*/
-        //List<ActivityManager.RunningTaskInfo> runningAppProcessInfo = am.getRunningTasks(10);
         return runningAppProcessInfo.size();
         //return am.getRunningServices(100).size();
     }

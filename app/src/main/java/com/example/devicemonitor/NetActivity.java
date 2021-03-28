@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.Activity;
 import android.content.Context;
 import android.net.ConnectivityManager;
+import android.net.Network;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.util.Enumeration;
 import java.util.LinkedList;
 
@@ -26,7 +28,7 @@ public class NetActivity extends AppCompatActivity {
 
         TextView netInfo = findViewById(R.id.netInfo);
         //load();
-        netInfo.setText(getnetInfo());
+        netInfo.setText(getIP());
     }
 
     private String getnetInfo(){
@@ -75,5 +77,16 @@ public class NetActivity extends AppCompatActivity {
 
     public static boolean contains(InetAddress addr) {
         return inetAddresses.contains(addr);
+    }
+
+    private String getIP(){
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+
+        Network network = connectivityManager.getActiveNetwork();
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        return networkInfo.getState().toString();
+        //return networkInfo.getTypeName();
+        
+
     }
 }

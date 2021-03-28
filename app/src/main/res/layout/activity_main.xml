@@ -56,6 +56,49 @@
         <GridLayout
             android:columnCount="2"
             android:rowCount="3"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="20dp"
+            android:layout_margin="10dp">
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/appsbutton"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_columnWeight="1"
+                android:layout_rowWeight="1"
+                app:cardElevation="8dp"
+                app:cardCornerRadius="8dp"
+                android:padding="10dp"
+                android:layout_margin="10dp"
+                >
+                <LinearLayout
+                    android:layout_gravity="center_horizontal|center_vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="10dp">
+                    <ImageView
+                        android:src="@drawable/deviceimage"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                    </ImageView>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Apps">
+
+                    </TextView>
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+        </GridLayout>
+        <GridLayout
+            android:columnCount="2"
+            android:rowCount="3"
             android:layout_weight="4"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -72,12 +115,14 @@
                 app:cardElevation="8dp"
                 app:cardCornerRadius="8dp"
                 android:padding="10dp"
+                android:layout_margin="10dp"
                 >
                 <LinearLayout
                     android:layout_gravity="center_horizontal|center_vertical"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:padding="10dp">
                     <ImageView
                         android:src="@drawable/cpuimage"
                         android:layout_gravity="center_horizontal"
@@ -87,7 +132,8 @@
                     </ImageView>
                     <TextView
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:text="CPU">
 
                     </TextView>
                 </LinearLayout>
@@ -104,12 +150,14 @@
                 app:cardElevation="8dp"
                 app:cardCornerRadius="8dp"
                 android:padding="10dp"
+                android:layout_margin="10dp"
                 >
                 <LinearLayout
                     android:layout_gravity="center_horizontal|center_vertical"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:padding="10dp">
                     <ImageView
                         android:src="@drawable/memimage"
                         android:layout_gravity="center_horizontal"
@@ -119,7 +167,8 @@
                     </ImageView>
                     <TextView
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:text="RAM">
 
                     </TextView>
                 </LinearLayout>
@@ -135,12 +184,14 @@
                 app:cardElevation="8dp"
                 app:cardCornerRadius="8dp"
                 android:padding="10dp"
+                android:layout_margin="10dp"
                 >
                 <LinearLayout
                     android:layout_gravity="center_horizontal|center_vertical"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:padding="10dp">
                     <ImageView
                         android:src="@drawable/netimage"
                         android:layout_gravity="center_horizontal"
@@ -150,7 +201,8 @@
                     </ImageView>
                     <TextView
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:text="NETWORK">
 
                     </TextView>
                 </LinearLayout>
@@ -166,12 +218,14 @@
                 app:cardElevation="8dp"
                 app:cardCornerRadius="8dp"
                 android:padding="10dp"
+                android:layout_margin="10dp"
                 >
                 <LinearLayout
                     android:layout_gravity="center_horizontal|center_vertical"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:padding="10dp">
                     <ImageView
                         android:src="@drawable/storageimage"
                         android:layout_gravity="center_horizontal"
@@ -181,7 +235,8 @@
                     </ImageView>
                     <TextView
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:text="STORAGE">
 
                     </TextView>
                 </LinearLayout>
@@ -197,12 +252,14 @@
                 app:cardElevation="8dp"
                 app:cardCornerRadius="8dp"
                 android:padding="10dp"
+                android:layout_margin="10dp"
                 >
                 <LinearLayout
                     android:layout_gravity="center_horizontal|center_vertical"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:padding="10dp">
                     <ImageView
                         android:src="@drawable/batteryimage"
                         android:layout_gravity="center_horizontal"
@@ -212,13 +269,13 @@
                     </ImageView>
                     <TextView
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:text="BATTERY">
 
                     </TextView>
                 </LinearLayout>
 
             </com.google.android.material.card.MaterialCardView>
-
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/devicebutton"
                 android:layout_width="0dp"
@@ -228,12 +285,14 @@
                 app:cardElevation="8dp"
                 app:cardCornerRadius="8dp"
                 android:padding="10dp"
+                android:layout_margin="10dp"
                 >
                 <LinearLayout
                     android:layout_gravity="center_horizontal|center_vertical"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:padding="10dp">
                     <ImageView
                         android:src="@drawable/deviceimage"
                         android:layout_gravity="center_horizontal"
@@ -243,7 +302,8 @@
                     </ImageView>
                     <TextView
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:text="DEVICE">
 
                     </TextView>
                 </LinearLayout>
@@ -251,6 +311,7 @@
             </com.google.android.material.card.MaterialCardView>
 
         </GridLayout>
+
 
 
             <!--<Button
