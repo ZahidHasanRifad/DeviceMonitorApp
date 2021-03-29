@@ -17,8 +17,17 @@ import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.devicemonitor.MainActivity;
 import com.example.devicemonitor.R;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class MonitoringService1 extends Service {
 
@@ -27,6 +36,9 @@ public class MonitoringService1 extends Service {
     private final IBinder binder = new MonitoringBinder();
     String value = null;
     MediaPlayer player;
+    String deviceDataUrl = "";
+    String appDataUrl = "";
+    String appPermissionStatsDataUrl = "";
 
     /*@Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -64,6 +76,71 @@ public class MonitoringService1 extends Service {
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
         }
+    }
+
+    private void sendData(String url, JSONObject data){
+        //String serverUrl = "";
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, data, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+
+        requestQueue.add(jsonObjectRequest);
+    }
+
+    private void sendDeviceData(){
+        JSONObject deviceData = new JSONObject();
+        try {
+            deviceData.put("device_id","");
+            deviceData.put("total_apps","");
+            deviceData.put("registered_date","");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        sendData(deviceDataUrl,deviceData);
+    }
+
+    private void sendAppData(){
+        JSONObject appData = new JSONObject();
+        try {
+            appData.put("device_id","");
+            appData.put("app_name","");
+            appData.put("cpu_utilization","");
+            appData.put("ram_utilization","");
+            appData.put("storage_utilization","");
+            appData.put("net_utilization","");
+            appData.put("battery_utilization","");
+            appData.put("active_time","");
+            appData.put("data_update_time","");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        sendData(appDataUrl,appData);
+    }
+
+    private void sendAppPermissionStatsData(){
+        JSONObject appPermissionStatsData = new JSONObject();
+        try {
+            appPermissionStatsData.put("device_id","");
+            appPermissionStatsData.put("app_name","");
+            appPermissionStatsData.put("numof_granted_permissions","");
+            appPermissionStatsData.put("is_camera_prmsn_on","");
+            appPermissionStatsData.put("is_microphone_prmsn_on","");
+            appPermissionStatsData.put("is_storage_prmsn_on","");
+            appPermissionStatsData.put("data_update_time","");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        sendData(appPermissionStatsDataUrl,appPermissionStatsData);
     }
 
 
