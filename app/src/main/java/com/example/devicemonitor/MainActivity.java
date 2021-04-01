@@ -2,18 +2,15 @@ package com.example.devicemonitor;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-import android.app.Activity;
-import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.IBinder;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -21,31 +18,49 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.devicemonitor.bgservice.MonitoringService;
-import com.example.devicemonitor.bgservice.MonitoringService1;
-import com.example.devicemonitor.bgservice.RecieveData;
+import com.example.devicemonitor.bgservice.DataReceiverService;
+import com.example.devicemonitor.bgservice.DataServerService;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
     //private RecieveData recieveData;
-    private MonitoringService1 monitoringService1;
-    boolean monitoringBound = false;
+    private DataServerService dataServerService;
+    //private DataReceiverService dataReceiverService;
+    boolean isSeviceBound = false;
+    //boolean dataReceiverBound = false;
 
     private ServiceConnection connection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            MonitoringService1.MonitoringBinder binder1 = (MonitoringService1.MonitoringBinder) service;
-            monitoringService1 = binder1.getService();
-            monitoringBound = true;
+            DataServerService.DataServerBinder binder = (DataServerService.DataServerBinder) service;
+            dataServerService = binder.getService();
+            isSeviceBound = true;
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            monitoringBound = false;
+            isSeviceBound = false;
         }
     };
+
+    /*private ServiceConnection dataReceiverConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            DataReceiverService.DataReceiverBinder binder = (DataReceiverService.DataReceiverBinder) service;
+            dataReceiverService = binder.getService();
+            dataReceiverBound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            dataReceiverBound = false;
+        }
+    };*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +69,8 @@ public class MainActivity extends AppCompatActivity {
         //setUpServiceReciever();
 
         TextView totalApp =findViewById(R.id.textview);
-        totalApp.setText(String.valueOf(getNumberofApp("sys")));
+        //totalApp.setText(String.valueOf(getNumberofApp("sys")));
+        totalApp.setText(String.valueOf(getNumberOfTotalApp()));
 
         CardView cpubutton = findViewById(R.id.cpubutton);
         CardView memorybutton = findViewById(R.id.membutton);
@@ -101,8 +117,8 @@ public class MainActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked == true){
                     launchMonitoringService();
-                    if (monitoringBound) {
-                        String data = monitoringService1.getData();
+                    if (isSeviceBound) {
+                        String data = dataServerService.getData();
                         Toast.makeText(MainActivity.this, data, Toast.LENGTH_SHORT).show();
                     }
                 }else {
@@ -116,8 +132,21 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void launchMonitoringService(){
-        Intent intent = new Intent(this, MonitoringService1.class);
-        intent.putExtra("sendItem", "start monitoring");
+        Intent intent = new Intent(this, DataServerService.class);
+        intent.putExtra("deviceId", generateDeviceId());
+        intent.putExtra("numapps", getNumberOfTotalApp());
+        intent.putExtra("apps",getAppsName()); // value is installed applist name only
+        intent.putExtra("cpus","");//value is a applist
+        intent.putExtra("rams","");//value is a applist
+        intent.putExtra("nets","");//value is a applist
+        intent.putExtra("storages","");//value is a applist
+        intent.putExtra("batterys","");
+        intent.putExtra("activetimes","");
+        intent.putExtra("totalpermisstion",getAppsGrantedTotalPermission());
+        intent.putExtra("camerapermission",isPermissionOn("CAMERA"));
+        intent.putExtra("microphonepermission",isPermissionOn("RECORD_AUDIO"));
+        intent.putExtra("storagepermissionRead",isPermissionOn("READ_EXTERNAL_STORAGE"));
+        intent.putExtra("storagepermissionWrite",isPermissionOn("WRITE_EXTERNAL_STORAGE"));
         bindService(intent,connection, Context.BIND_AUTO_CREATE);
         //startService(intent);
     }
@@ -125,96 +154,92 @@ public class MainActivity extends AppCompatActivity {
     private void stopMonitoringService(){
         //Intent intent = new Intent(this, MonitoringService1.class);
         unbindService(connection);
-        monitoringBound = false;
+        isSeviceBound = false;
         //stopService(intent);
     }
 
-
-
-    /*private void stopMonitoringService(){
-        Intent intent = new Intent(this, MonitoringService.class);
-        stopService(intent);
+    private String generateDeviceId(){
+        String deviceId = null;
+        Random random = new Random();
+        int id= random.nextInt(999999);
+        deviceId = String.valueOf(id);
+        return deviceId;
     }
 
 
+    private int getNumberOfTotalApp(){
+        int totalApp,tem;
+        totalApp = getPackageManager().getInstalledApplications(PackageManager.MATCH_SYSTEM_ONLY).size();
+        tem = getPackageManager().getInstalledApplications(0).size()-totalApp;
+        //totalApp = getPackageManager().getInstalledPackages(0).size();
+        return tem;
+    }
 
-    private void launchMonitoringService(){
-        Intent intent = new Intent(this, MonitoringService.class);
-        intent.putExtra("sendItem", "start monitoring");
-        intent.putExtra("reciever", recieveData);
-        startService(intent);
-    }*/
+    private List<ApplicationInfo> getUserInstalledApps(){
+        List<String> appnames = new LinkedList<>();
 
-    /*public void setUpServiceReciever(){
-        recieveData = new RecieveData(new Handler());
-        recieveData.setReciever(new RecieveData.Reciever() {
-            @Override
-            public void onReceiveResult(int resultCode, Bundle resultData) {
-                if (resultCode == RESULT_OK){
-                    String resultValue = resultData.getString("resultValue");
-                    Toast.makeText(MainActivity.this, resultValue, Toast.LENGTH_SHORT).show();
+        //PackageManager packageManager = getPackageManager();
+        List<ApplicationInfo> systemApplist = getPackageManager().getInstalledApplications(PackageManager.MATCH_SYSTEM_ONLY);
+        List<ApplicationInfo> totalAppList = getPackageManager().getInstalledApplications(0);
+        List<ApplicationInfo> userAppsList = new LinkedList<>();
+        for (ApplicationInfo app : systemApplist){
+            if (!totalAppList.contains(app)){
+                userAppsList.add(app);
+            }
+        }
+        return userAppsList;
+    }
+
+    private String[] getAppsName(){
+        String[] appsName = new String[getUserInstalledApps().size()];
+        int i = 0;
+        for (ApplicationInfo app : getUserInstalledApps()){
+            appsName[i] = app.name;
+            i++;
+        }
+        return appsName;
+    }
+
+    private List<String> getAppGrantedPermission(String packageName){
+        List<String> granted = new LinkedList<>();
+        try {
+            PackageInfo packageInfo = getPackageManager().getPackageInfo(packageName, PackageManager.GET_PERMISSIONS);
+            for (int j = 0; j<packageInfo.requestedPermissions.length; j++){
+                if ((packageInfo.requestedPermissionsFlags[j] & PackageInfo.REQUESTED_PERMISSION_GRANTED)==PackageInfo.REQUESTED_PERMISSION_GRANTED){
+                    granted.add(packageInfo.requestedPermissions[j]);
                 }
             }
-        });
-    }*/
-
-    // receive result from background service
-    /*private BroadcastReceiver monitoringReciever = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            int resultCode = intent.getIntExtra("resultCode", RESULT_CANCELED);
-            if(resultCode == Activity.RESULT_OK){
-                String resultValue = intent.getStringExtra("resultValue");
-                Toast.makeText(MainActivity.this, resultValue, Toast.LENGTH_SHORT).show();
-            }
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
         }
-    };*/
-
-    /*@Override
-    protected void onStart() {
-        super.onStart();
-        LocalBroadcastManager.getInstance(this).registerReceiver(monitoringReciever, new IntentFilter(MonitoringService.ACTION));
+        return granted;
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        LocalBroadcastManager.getInstance(this).registerReceiver(monitoringReciever, new IntentFilter(MonitoringService.ACTION));
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(monitoringReciever);
-    }
-*/
-    private int getNumberOfTotalApp(){
-        int totalApp;
-        //totalApp = getPackageManager().getInstalledApplications(0).size();
-        totalApp = getPackageManager().getInstalledPackages(0).size();
-        return totalApp;
-    }
-
-    private int getNumberofApp(String s){
-        int totalSystemApp = 0;
-        int totalUserInstalledApp = 0;
-        List<ApplicationInfo> applist = getPackageManager().getInstalledApplications(0);
-        for (ApplicationInfo app : applist){
-            int flag = 0;
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                flag = app.category;
-                if (flag != ApplicationInfo.CATEGORY_UNDEFINED){
-                    totalSystemApp++;
-                }else totalUserInstalledApp++;
-            }
-
-
+    private String[] getAppsGrantedTotalPermission(){
+        List<ApplicationInfo> applicationInfos = getUserInstalledApps();
+        String[] agtp = new String[applicationInfos.size()];
+        int i = 0;
+        for (ApplicationInfo app : applicationInfos){
+                List<String> granted = getAppGrantedPermission(app.packageName);
+                agtp[i] = app.name+":"+String.valueOf(granted.size());
+                i++;
         }
-        if (s.equals("sys"))return totalSystemApp;
-        else return totalUserInstalledApp;
+        //packageManager.get
+        return agtp;
     }
 
-    private void getCpuUtilization(){
-
+    private String[] isPermissionOn(String permission){
+        List<ApplicationInfo> apps = getUserInstalledApps();
+        String [] icp = new String[apps.size()];
+        int i = 0;
+        for (ApplicationInfo app : apps){
+            List<String> granted = getAppGrantedPermission(app.packageName);
+            if (granted.contains(permission)){
+                icp[i] = app.name+":"+"1";
+            }else icp[i] = app.name+":"+"0";
+            i++;
+        }
+        return icp;
     }
+
 }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,353 +7,360 @@
     android:padding="@dimen/activity_horizontal_margin"
     tools:context=".MainActivity">
 
-    <!--<ScrollView
+    <!--<LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:ignore="MissingConstraints">-->
-    <LinearLayout
+        android:layout_height="match_parent">-->
+   <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:ignore="MissingConstraints"
-            android:orientation="horizontal">
-            <TextView
-                android:id="@+id/monitortextview"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="Monitoring ">
+        android:layout_height="wrap_content"
+        tools:ignore="MissingConstraints">
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content">
+           <LinearLayout
+               android:layout_width="match_parent"
+               android:layout_height="680dp"
+               android:orientation="vertical">
+               <LinearLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   tools:ignore="MissingConstraints"
+                   android:orientation="horizontal">
+                   <TextView
+                       android:id="@+id/monitortextview"
+                       android:layout_width="wrap_content"
+                       android:layout_height="match_parent"
+                       android:text="Monitoring ">
 
-            </TextView>
-            <Switch
-                android:id="@+id/monitorswitch"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                tools:ignore="MissingConstraints">
-            </Switch>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            tools:ignore="MissingConstraints"
-            android:layout_marginRight="@dimen/activity_horizontal_margin">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Total App  ">
+                   </TextView>
+                   <Switch
+                       android:id="@+id/monitorswitch"
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"
+                       tools:ignore="MissingConstraints">
+                   </Switch>
+               </LinearLayout>
+               <LinearLayout
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:orientation="horizontal"
+                   tools:ignore="MissingConstraints"
+                   android:layout_marginRight="@dimen/activity_horizontal_margin">
+                   <TextView
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"
+                       android:text="Total App  ">
 
-            </TextView>
-            <TextView
-                android:id="@+id/textview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                   </TextView>
+                   <TextView
+                       android:id="@+id/textview"
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content">
 
-            </TextView>
-        </LinearLayout>
-        <GridLayout
-            android:columnCount="2"
-            android:rowCount="3"
-            android:layout_weight="1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="20dp"
-            android:layout_margin="10dp">
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/appsbutton"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_columnWeight="1"
-                android:layout_rowWeight="1"
-                app:cardElevation="8dp"
-                app:cardCornerRadius="8dp"
-                android:padding="10dp"
-                android:layout_margin="10dp"
-                >
-                <LinearLayout
-                    android:layout_gravity="center_horizontal|center_vertical"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="10dp">
-                    <ImageView
-                        android:src="@drawable/deviceimage"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
+                   </TextView>
+               </LinearLayout>
+               <GridLayout
+                   android:columnCount="2"
+                   android:rowCount="3"
+                   android:layout_weight="1"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:padding="20dp"
+                   android:layout_margin="10dp">
+                   <com.google.android.material.card.MaterialCardView
+                       android:id="@+id/appsbutton"
+                       android:layout_width="0dp"
+                       android:layout_height="0dp"
+                       android:layout_columnWeight="1"
+                       android:layout_rowWeight="1"
+                       app:cardElevation="8dp"
+                       app:cardCornerRadius="8dp"
+                       android:padding="10dp"
+                       android:layout_margin="10dp"
+                       >
+                       <LinearLayout
+                           android:layout_gravity="center_horizontal|center_vertical"
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content"
+                           android:orientation="vertical"
+                           android:padding="10dp">
+                           <ImageView
+                               android:src="@drawable/deviceimage"
+                               android:layout_gravity="center_horizontal"
+                               android:layout_width="wrap_content"
+                               android:layout_height="wrap_content">
 
-                    </ImageView>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Apps">
+                           </ImageView>
+                           <TextView
+                               android:layout_width="wrap_content"
+                               android:layout_height="wrap_content"
+                               android:text="Apps">
 
-                    </TextView>
-                </LinearLayout>
+                           </TextView>
+                       </LinearLayout>
 
-            </com.google.android.material.card.MaterialCardView>
+                   </com.google.android.material.card.MaterialCardView>
 
-        </GridLayout>
-        <GridLayout
-            android:columnCount="2"
-            android:rowCount="3"
-            android:layout_weight="4"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:padding="20dp"
-            android:layout_margin="10dp">
+               </GridLayout>
 
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cpubutton"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_columnWeight="1"
-                android:layout_rowWeight="1"
-                app:cardElevation="8dp"
-                app:cardCornerRadius="8dp"
-                android:padding="10dp"
-                android:layout_margin="10dp"
-                >
-                <LinearLayout
-                    android:layout_gravity="center_horizontal|center_vertical"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="10dp">
-                    <ImageView
-                        android:src="@drawable/cpuimage"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
-
-                    </ImageView>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="CPU">
-
-                    </TextView>
-                </LinearLayout>
+               <GridLayout
+                   android:columnCount="2"
+                   android:rowCount="3"
+                   android:layout_weight="4"
+                   android:layout_width="match_parent"
+                   android:layout_height="0dp"
+                   android:padding="10dp"
+                   android:layout_margin="5dp">
 
 
-            </com.google.android.material.card.MaterialCardView>
+                   <com.google.android.material.card.MaterialCardView
+                       android:id="@+id/cpubutton"
+                       android:layout_width="0dp"
+                       android:layout_height="0dp"
+                       android:layout_columnWeight="1"
+                       android:layout_rowWeight="1"
+                       app:cardElevation="8dp"
+                       app:cardCornerRadius="8dp"
+                       android:padding="5dp"
+                       android:layout_margin="5dp"
+                       >
+                       <LinearLayout
+                           android:layout_gravity="center_horizontal|center_vertical"
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content"
+                           android:orientation="vertical"
+                           android:padding="10dp">
+                           <ImageView
+                               android:src="@drawable/cpu"
+                               android:layout_gravity="center_horizontal"
+                               android:layout_width="wrap_content"
+                               android:layout_height="wrap_content">
 
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/membutton"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_columnWeight="1"
-                android:layout_rowWeight="1"
-                app:cardElevation="8dp"
-                app:cardCornerRadius="8dp"
-                android:padding="10dp"
-                android:layout_margin="10dp"
-                >
-                <LinearLayout
-                    android:layout_gravity="center_horizontal|center_vertical"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="10dp">
-                    <ImageView
-                        android:src="@drawable/memimage"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
+                           </ImageView>
+                           <TextView
+                               android:layout_width="wrap_content"
+                               android:layout_height="wrap_content"
+                               android:text="CPU">
 
-                    </ImageView>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="RAM">
-
-                    </TextView>
-                </LinearLayout>
+                           </TextView>
+                       </LinearLayout>
 
 
-            </com.google.android.material.card.MaterialCardView>
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/networkbutton"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_columnWeight="1"
-                android:layout_rowWeight="1"
-                app:cardElevation="8dp"
-                app:cardCornerRadius="8dp"
-                android:padding="10dp"
-                android:layout_margin="10dp"
-                >
-                <LinearLayout
-                    android:layout_gravity="center_horizontal|center_vertical"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="10dp">
-                    <ImageView
-                        android:src="@drawable/netimage"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
+                   </com.google.android.material.card.MaterialCardView>
 
-                    </ImageView>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="NETWORK">
+                   <com.google.android.material.card.MaterialCardView
+                       android:id="@+id/membutton"
+                       android:layout_width="0dp"
+                       android:layout_height="0dp"
+                       android:layout_columnWeight="1"
+                       android:layout_rowWeight="1"
+                       app:cardElevation="8dp"
+                       app:cardCornerRadius="8dp"
+                       android:padding="5dp"
+                       android:layout_margin="5dp"
+                       >
+                       <LinearLayout
+                           android:layout_gravity="center_horizontal|center_vertical"
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content"
+                           android:orientation="vertical"
+                           android:padding="10dp">
+                           <ImageView
+                               android:src="@drawable/ram"
+                               android:layout_gravity="center_horizontal"
+                               android:layout_width="wrap_content"
+                               android:layout_height="wrap_content">
 
-                    </TextView>
-                </LinearLayout>
+                           </ImageView>
+                           <TextView
+                               android:layout_width="wrap_content"
+                               android:layout_height="wrap_content"
+                               android:text="RAM">
 
-
-            </com.google.android.material.card.MaterialCardView>
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/storagebutton"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_columnWeight="1"
-                android:layout_rowWeight="1"
-                app:cardElevation="8dp"
-                app:cardCornerRadius="8dp"
-                android:padding="10dp"
-                android:layout_margin="10dp"
-                >
-                <LinearLayout
-                    android:layout_gravity="center_horizontal|center_vertical"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="10dp">
-                    <ImageView
-                        android:src="@drawable/storageimage"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
-
-                    </ImageView>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="STORAGE">
-
-                    </TextView>
-                </LinearLayout>
+                           </TextView>
+                       </LinearLayout>
 
 
-            </com.google.android.material.card.MaterialCardView>
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/batterybutton"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_columnWeight="1"
-                android:layout_rowWeight="1"
-                app:cardElevation="8dp"
-                app:cardCornerRadius="8dp"
-                android:padding="10dp"
-                android:layout_margin="10dp"
-                >
-                <LinearLayout
-                    android:layout_gravity="center_horizontal|center_vertical"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="10dp">
-                    <ImageView
-                        android:src="@drawable/batteryimage"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
+                   </com.google.android.material.card.MaterialCardView>
+                   <com.google.android.material.card.MaterialCardView
+                       android:id="@+id/networkbutton"
+                       android:layout_width="0dp"
+                       android:layout_height="0dp"
+                       android:layout_columnWeight="1"
+                       android:layout_rowWeight="1"
+                       app:cardElevation="8dp"
+                       app:cardCornerRadius="8dp"
+                       android:padding="5dp"
+                       android:layout_margin="5dp"
+                       >
+                       <LinearLayout
+                           android:layout_gravity="center_horizontal|center_vertical"
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content"
+                           android:orientation="vertical"
+                           android:padding="10dp">
+                           <ImageView
+                               android:src="@drawable/net"
+                               android:layout_gravity="center_horizontal"
+                               android:layout_width="wrap_content"
+                               android:layout_height="wrap_content">
 
-                    </ImageView>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="BATTERY">
+                           </ImageView>
+                           <TextView
+                               android:layout_width="wrap_content"
+                               android:layout_height="wrap_content"
+                               android:text="NETWORK">
 
-                    </TextView>
-                </LinearLayout>
-
-            </com.google.android.material.card.MaterialCardView>
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/devicebutton"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_columnWeight="1"
-                android:layout_rowWeight="1"
-                app:cardElevation="8dp"
-                app:cardCornerRadius="8dp"
-                android:padding="10dp"
-                android:layout_margin="10dp"
-                >
-                <LinearLayout
-                    android:layout_gravity="center_horizontal|center_vertical"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="10dp">
-                    <ImageView
-                        android:src="@drawable/deviceimage"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
-
-                    </ImageView>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="DEVICE">
-
-                    </TextView>
-                </LinearLayout>
-
-            </com.google.android.material.card.MaterialCardView>
-
-        </GridLayout>
+                           </TextView>
+                       </LinearLayout>
 
 
+                   </com.google.android.material.card.MaterialCardView>
+                   <com.google.android.material.card.MaterialCardView
+                       android:id="@+id/storagebutton"
+                       android:layout_width="0dp"
+                       android:layout_height="0dp"
+                       android:layout_columnWeight="1"
+                       android:layout_rowWeight="1"
+                       app:cardElevation="8dp"
+                       app:cardCornerRadius="8dp"
+                       android:padding="5dp"
+                       android:layout_margin="5dp"
+                       >
+                       <LinearLayout
+                           android:layout_gravity="center_horizontal|center_vertical"
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content"
+                           android:orientation="vertical"
+                           android:padding="10dp">
+                           <ImageView
+                               android:src="@drawable/storage"
+                               android:layout_gravity="center_horizontal"
+                               android:layout_width="wrap_content"
+                               android:layout_height="wrap_content">
 
-            <!--<Button
-                android:id="@+id/cpubutton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="CPU"
-                android:layout_marginRight="@dimen/activity_horizontal_margin">
+                           </ImageView>
+                           <TextView
+                               android:layout_width="wrap_content"
+                               android:layout_height="wrap_content"
+                               android:text="STORAGE">
 
-            </Button>-->
-            <!--<Button
-                android:id="@+id/rambutton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="MEMORY">
+                           </TextView>
+                       </LinearLayout>
 
-            </Button>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <Button
-                android:id="@+id/netbutton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Network"
-                android:layout_marginRight="@dimen/activity_horizontal_margin">
+                   </com.google.android.material.card.MaterialCardView>
+                   <com.google.android.material.card.MaterialCardView
+                       android:id="@+id/batterybutton"
+                       android:layout_width="0dp"
+                       android:layout_height="0dp"
+                       android:layout_columnWeight="1"
+                       android:layout_rowWeight="1"
+                       app:cardElevation="8dp"
+                       app:cardCornerRadius="8dp"
+                       android:padding="5dp"
+                       android:layout_margin="5dp"
+                       >
+                       <LinearLayout
+                           android:layout_gravity="center_horizontal|center_vertical"
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content"
+                           android:orientation="vertical"
+                           android:padding="10dp">
+                           <ImageView
+                               android:src="@drawable/battery"
+                               android:layout_gravity="center_horizontal"
+                               android:layout_width="wrap_content"
+                               android:layout_height="wrap_content">
 
-            </Button>
-            <Button
-                android:id="@+id/bgprocessbutton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Process Manager">
+                           </ImageView>
+                           <TextView
+                               android:layout_width="wrap_content"
+                               android:layout_height="wrap_content"
+                               android:text="BATTERY">
 
-            </Button>
-        </LinearLayout>-->
-    </LinearLayout>
+                           </TextView>
+                       </LinearLayout>
 
-    <!--</ScrollView>-->
+                   </com.google.android.material.card.MaterialCardView>
+                   <com.google.android.material.card.MaterialCardView
+                       android:id="@+id/devicebutton"
+                       android:layout_width="0dp"
+                       android:layout_height="0dp"
+                       android:layout_columnWeight="1"
+                       android:layout_rowWeight="1"
+                       app:cardElevation="8dp"
+                       app:cardCornerRadius="8dp"
+                       android:padding="5dp"
+                       android:layout_margin="5dp"
+                       >
+                       <LinearLayout
+                           android:layout_gravity="center_horizontal|center_vertical"
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content"
+                           android:orientation="vertical"
+                           android:padding="10dp">
+                           <ImageView
+                               android:src="@drawable/android"
+                               android:layout_gravity="center_horizontal"
+                               android:layout_width="wrap_content"
+                               android:layout_height="wrap_content">
 
+                           </ImageView>
+                           <TextView
+                               android:layout_width="wrap_content"
+                               android:layout_height="wrap_content"
+                               android:text="DEVICE">
+
+                           </TextView>
+                       </LinearLayout>
+
+                   </com.google.android.material.card.MaterialCardView>
+
+               </GridLayout>
+
+
+
+               <!--<Button
+                   android:id="@+id/cpubutton"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:text="CPU"
+                   android:layout_marginRight="@dimen/activity_horizontal_margin">
+
+               </Button>-->
+               <!--<Button
+                   android:id="@+id/rambutton"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:text="MEMORY">
+
+               </Button>
+
+           <LinearLayout
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:orientation="horizontal">
+               <Button
+                   android:id="@+id/netbutton"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:text="Network"
+                   android:layout_marginRight="@dimen/activity_horizontal_margin">
+
+               </Button>
+               <Button
+                   android:id="@+id/bgprocessbutton"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:text="Process Manager">
+
+               </Button>
+           </LinearLayout>-->
+           </LinearLayout>
+       </LinearLayout>
+
+    </ScrollView>
     <!--<LinearLayout
         android:id="@+id/totalApp"
         android:layout_width="match_parent"
@@ -438,4 +445,4 @@
     </LinearLayout>-->
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

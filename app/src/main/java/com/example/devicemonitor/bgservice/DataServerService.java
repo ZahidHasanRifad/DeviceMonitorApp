@@ -1,6 +1,5 @@
 package com.example.devicemonitor.bgservice;
 
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -11,7 +10,6 @@ import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
 import android.provider.Settings;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
@@ -29,16 +27,16 @@ import com.example.devicemonitor.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class MonitoringService1 extends Service {
+public class DataServerService extends Service {
 
 
     private static final String CHANNEL_ID = "1";
-    private final IBinder binder = new MonitoringBinder();
+    private final IBinder binder = new DataServerBinder();
     String value = null;
     MediaPlayer player;
-    String deviceDataUrl = "";
-    String appDataUrl = "";
-    String appPermissionStatsDataUrl = "";
+    String deviceDataUrl = "http://192.168.0.110:8000/server/addDevice";
+    String appDataUrl = "http://192.168.0.110:8000/server/addAppData";
+    String appPermissionStatsDataUrl = "http://192.168.0.110:8000/server/addAppPermissionStats";
 
     /*@Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -50,32 +48,48 @@ public class MonitoringService1 extends Service {
         return START_STICKY;
     }
 */
-    @Override
+    /*@Override
     public void onDestroy() {
         super.onDestroy();
         player.stop();
-    }
+    }*/
 
-    public class MonitoringBinder extends Binder{
-        public MonitoringService1 getService(){
-            return MonitoringService1.this;
+    public class DataServerBinder extends Binder{
+        public DataServerService getService(){
+            return DataServerService.this;
         }
     }
 
     private void createNotificationChannel() {
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is new and not in the support library
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = getString(R.string.channel_name);
             String description = getString(R.string.channel_description);
             int importance = NotificationManager.IMPORTANCE_DEFAULT;
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
             channel.setDescription(description);
-            // Register the channel with the system; you can't change the importance
-            // or other notification behaviors after this
+
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
         }
+    }
+
+    private void showNotification(){
+        Intent intentnotification = new Intent(this, MainActivity.class);
+        intentnotification.setFlags(intentnotification.FLAG_ACTIVITY_NEW_TASK | intentnotification.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intentnotification, 0);
+        createNotificationChannel();
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setContentTitle("Monitoring Notification")
+                .setContentText(value)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true);
+
+        NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
+        int notificationId = 101;
+        notificationManagerCompat.notify(notificationId, notificationBuilder.build());
     }
 
     private void sendData(String url, JSONObject data){
@@ -152,7 +166,43 @@ public class MonitoringService1 extends Service {
         player.setLooping(true);
         player.start();
 
-        Intent intentnotification = new Intent(this, MainActivity.class);
+        JSONObject deviceData = new JSONObject();
+        try {
+            deviceData.put("device_id","");
+            deviceData.put("total_apps","");
+            deviceData.put("registered_date","");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        JSONObject appData = new JSONObject();
+        try {
+            appData.put("device", deviceData);
+            appData.put("app_name","");
+            appData.put("cpu_utilization","");
+            appData.put("ram_utilization","");
+            appData.put("storage_utilization","");
+            appData.put("net_utilization","");
+            appData.put("battery_utilization","");
+            appData.put("active_time","");
+            appData.put("data_update_time","");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        JSONObject appPermissionStatsData = new JSONObject();
+        try {
+            appPermissionStatsData.put("device", deviceData);
+            appPermissionStatsData.put("app_name","");
+            appPermissionStatsData.put("numof_granted_permissions","");
+            appPermissionStatsData.put("is_camera_prmsn_on","");
+            appPermissionStatsData.put("is_microphone_prmsn_on","");
+            appPermissionStatsData.put("is_storage_prmsn_on","");
+            appPermissionStatsData.put("data_update_time","");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        /*Intent intentnotification = new Intent(this, MainActivity.class);
         intentnotification.setFlags(intentnotification.FLAG_ACTIVITY_NEW_TASK | intentnotification.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intentnotification, 0);
         createNotificationChannel();
@@ -166,7 +216,7 @@ public class MonitoringService1 extends Service {
 
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
         int notificationId = 101;
-        notificationManagerCompat.notify(notificationId, notificationBuilder.build());
+        notificationManagerCompat.notify(notificationId, notificationBuilder.build());*/
         return binder;
     }
 
