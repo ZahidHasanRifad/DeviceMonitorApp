@@ -19,11 +19,12 @@ public class RamActivity extends AppCompatActivity {
         setContentView(R.layout.activity_ram);
 
         TextView memInfo = findViewById(R.id.memInfo);
-        memInfo.setText(getRamInfo());
+        //memInfo.setText(getRamInfo());
     }
 
-    private String getRamInfo() {
+    private StringBuffer getRamInfo() {
         StringBuffer sb = new StringBuffer();
+
         String path = "/proc/meminfo";
         //sb.append("abi: ").append(Build.BOARD).append("\n");
         if (new File(path).exists()) {
@@ -41,7 +42,8 @@ public class RamActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
-        return sb.toString();
+        return sb;
         ////////////////
     }
+
 }

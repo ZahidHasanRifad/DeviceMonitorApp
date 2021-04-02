@@ -26,9 +26,14 @@ import com.example.devicemonitor.bgservice.DataServerService;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -88,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
         Intent intentnet = new Intent(this, NetActivity.class);
         Intent intentprocess = new Intent(this, ProcessActivity.class);
 
+        //printApps(getUserInstalledApps());
         cpubutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -139,18 +145,18 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, DataServerService.class);
         intent.putExtra("deviceId", generateDeviceId());
         intent.putExtra("numapps", getNumberOfTotalApp());
-        intent.putExtra("apps",getAppsName()); // value is installed applist name only
-        intent.putExtra("cpus","");//value is a applist
-        intent.putExtra("rams","");//value is a applist
-        intent.putExtra("nets","");//value is a applist
-        intent.putExtra("storages",getStorageStats());//value is a applist
-        intent.putExtra("batterys","");
-        intent.putExtra("activetimes","");
-        intent.putExtra("totalpermisstion",getAppsGrantedTotalPermission());
-        intent.putExtra("camerapermission",isPermissionOn("CAMERA"));
-        intent.putExtra("microphonepermission",isPermissionOn("RECORD_AUDIO"));
-        intent.putExtra("storagepermissionRead",isPermissionOn("READ_EXTERNAL_STORAGE"));
-        intent.putExtra("storagepermissionWrite",isPermissionOn("WRITE_EXTERNAL_STORAGE"));
+//        intent.putExtra("apps",getAppsName()); // value is installed applist name only
+//        intent.putExtra("cpus","");//value is a applist
+//        intent.putExtra("rams","");//value is a applist
+//        intent.putExtra("nets","");//value is a applist
+//        intent.putExtra("storages",getStorageStats());//value is a applist
+//        intent.putExtra("batterys","");
+//        intent.putExtra("activetimes","");
+//        intent.putExtra("totalpermisstion",getAppsGrantedTotalPermission());
+//        intent.putExtra("camerapermission",isPermissionOn("CAMERA"));
+//        intent.putExtra("microphonepermission",isPermissionOn("RECORD_AUDIO"));
+//        intent.putExtra("storagepermissionRead",isPermissionOn("READ_EXTERNAL_STORAGE"));
+//        intent.putExtra("storagepermissionWrite",isPermissionOn("WRITE_EXTERNAL_STORAGE"));
         bindService(intent,connection, Context.BIND_AUTO_CREATE);
         //startService(intent);
     }
@@ -180,40 +186,129 @@ public class MainActivity extends AppCompatActivity {
         return tem;
     }
 
-    private List<ApplicationInfo> getUserInstalledApps(){
-        List<String> appnames = new LinkedList<>();
-
-        //PackageManager packageManager = getPackageManager();
+    private List<ApplicationInfo> getUserInstalledAppsAsApplication(){
         List<ApplicationInfo> systemApplist = getPackageManager().getInstalledApplications(PackageManager.MATCH_SYSTEM_ONLY);
         List<ApplicationInfo> totalAppList = getPackageManager().getInstalledApplications(0);
-        List<ApplicationInfo> userAppsList = new LinkedList<>();
-        for (ApplicationInfo app : systemApplist){
-            if (!totalAppList.contains(app)){
+        List<ApplicationInfo> userAppsList = new ArrayList<>();
+
+        String[] apn = new String[totalAppList.size()];
+        String[] spn = new String[systemApplist.size()];
+        int i = 0, j = 0;
+        for (ApplicationInfo all : totalAppList){
+            apn[i] = all.packageName;
+            i++;
+        }
+        for (ApplicationInfo sys : systemApplist){
+            spn[j] = sys.packageName;
+            j++;
+        }
+        //allPackage.addAll(sysPackage);
+        List<String> l1 = new ArrayList<>(Arrays.asList(apn));
+        List<String> l2 = new ArrayList<>(Arrays.asList(spn));
+        Set<String> s1 = new HashSet<>(l1);
+        Set<String> s2 = new HashSet<>(l2);
+        s1.retainAll(s2);
+        l1.removeAll(s1);
+        l2.removeAll(s1);
+
+        l1.addAll(l2);
+
+        Set<String> user = new HashSet<>(l1);
+
+        for (ApplicationInfo app : totalAppList){
+            if (user.contains(app.packageName)){
                 userAppsList.add(app);
             }
         }
+
         return userAppsList;
     }
 
-    private String[] getAppsName(){
-        String[] appsName = new String[getUserInstalledApps().size()];
-        int i = 0;
-        for (ApplicationInfo app : getUserInstalledApps()){
-            appsName[i] = app.name;
+    private List<PackageInfo> getUserInstalledAppsAsPackage(){
+        List<String> appnames = new LinkedList<>();
+
+        //PackageManager packageManager = getPackageManager();
+//        List<ApplicationInfo> systemApplist = getPackageManager().getInstalledApplications(PackageManager.MATCH_SYSTEM_ONLY);
+//        List<ApplicationInfo> totalAppList = getPackageManager().getInstalledApplications(0);
+        List<PackageInfo> sysPackage = getPackageManager().getInstalledPackages(PackageManager.MATCH_SYSTEM_ONLY);
+        List<PackageInfo> allPackage = getPackageManager().getInstalledPackages(0);
+        List<PackageInfo> userAppsList = new ArrayList<>();
+        String[] apn = new String[allPackage.size()];
+        String[] spn = new String[sysPackage.size()];
+        int i = 0, j = 0;
+        for (PackageInfo all : allPackage){
+            apn[i] = all.packageName;
             i++;
         }
-        return appsName;
+        for (PackageInfo sys : sysPackage){
+            spn[j] = sys.packageName;
+            j++;
+        }
+        //allPackage.addAll(sysPackage);
+        List<String> l1 = new ArrayList<>(Arrays.asList(apn));
+        List<String> l2 = new ArrayList<>(Arrays.asList(spn));
+        Set<String> s1 = new HashSet<>(l1);
+        Set<String> s2 = new HashSet<>(l2);
+        s1.retainAll(s2);
+        l1.removeAll(s1);
+        l2.removeAll(s1);
+
+        l1.addAll(l2);
+
+        Set<String> user = new HashSet<>(l1);
+
+        for (PackageInfo app : allPackage){
+            if (user.contains(app.packageName)){
+                userAppsList.add(app);
+            }
+        }
+//        System.out.println("////////////////////////////////////////////////////////");
+        System.out.println(userAppsList.size());
+        for (PackageInfo a : userAppsList){
+            System.out.println(a.packageName);
+        }
+        
+        return userAppsList;
+    }
+
+    private void printApps(List<PackageInfo> apps){
+        //System.out.println("Total Installed Apps "+ String.valueOf(apps.size()));
+        for (PackageInfo app: apps){
+            //System.out.println(app.flags);
+        }
+
+    }
+
+//    private String[] getAppsName(){
+//        String[] appsName = new String[getUserInstalledApps().size()];
+//        int i = 0;
+//        for (ApplicationInfo app : getUserInstalledApps()){
+//            appsName[i] = getAppName(app);
+//            i++;
+//        }
+//        return appsName;
+//    }
+
+    private String getAppName(ApplicationInfo app){
+        String name = app.packageName;
+//        String[] packageName = app.processName.split(".");
+//        name = packageName[packageName.length-1];
+        return name;
     }
 
     private List<String> getAppGrantedPermission(String packageName){
         List<String> granted = new LinkedList<>();
         try {
             PackageInfo packageInfo = getPackageManager().getPackageInfo(packageName, PackageManager.GET_PERMISSIONS);
-            for (int j = 0; j<packageInfo.requestedPermissions.length; j++){
-                if ((packageInfo.requestedPermissionsFlags[j] & PackageInfo.REQUESTED_PERMISSION_GRANTED)==PackageInfo.REQUESTED_PERMISSION_GRANTED){
-                    granted.add(packageInfo.requestedPermissions[j]);
+            //System.out.println(packageInfo.packageName);
+            if (packageInfo != null){
+                for (int j = 0; j<packageInfo.requestedPermissions.length; j++){
+                    if ((packageInfo.requestedPermissionsFlags[j] & PackageInfo.REQUESTED_PERMISSION_GRANTED)==PackageInfo.REQUESTED_PERMISSION_GRANTED){
+                        granted.add(packageInfo.requestedPermissions[j]);
+                    }
                 }
             }
+
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
@@ -221,12 +316,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private String[] getAppsGrantedTotalPermission(){
-        List<ApplicationInfo> applicationInfos = getUserInstalledApps();
+        List<ApplicationInfo> applicationInfos = getUserInstalledAppsAsApplication();
         String[] agtp = new String[applicationInfos.size()];
         int i = 0;
         for (ApplicationInfo app : applicationInfos){
                 List<String> granted = getAppGrantedPermission(app.packageName);
-                agtp[i] = app.name+":"+String.valueOf(granted.size());
+                agtp[i] = getAppName(app)+":"+String.valueOf(granted.size());
+            //System.out.println(app.processName);
                 i++;
         }
         //packageManager.get
@@ -234,21 +330,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private String[] isPermissionOn(String permission){
-        List<ApplicationInfo> apps = getUserInstalledApps();
+        List<ApplicationInfo> apps = getUserInstalledAppsAsApplication();
         String [] icp = new String[apps.size()];
         int i = 0;
         for (ApplicationInfo app : apps){
             List<String> granted = getAppGrantedPermission(app.packageName);
             if (granted.contains(permission)){
-                icp[i] = app.name+":"+"1";
-            }else icp[i] = app.name+":"+"0";
+                icp[i] = getAppName(app)+":"+"1";
+            }else icp[i] = getAppName(app)+":"+"0";
             i++;
         }
         return icp;
     }
 
     private String[] getStorageStats(){
-        List<ApplicationInfo> apps = getUserInstalledApps();
+        List<ApplicationInfo> apps = getUserInstalledAppsAsApplication();
         String[] ss = new String[apps.size()];
         // UsageStatsManager usageStatsManager = (UsageStatsManager) getSystemService("usagestats");
         StorageStatsManager storageStatsManager = (StorageStatsManager) getSystemService(STORAGE_STATS_SERVICE);
@@ -256,8 +352,8 @@ public class MainActivity extends AppCompatActivity {
         for (ApplicationInfo app : apps){
             try {
                 Long appStorage = storageStatsManager.getTotalBytes(app.storageUuid);
-                appStorage = appStorage/(1024*1024);
-                ss[i] = app.name+":"+String.valueOf(appStorage);
+                appStorage /= (1024 * 1024);
+                ss[i] = getAppName(app)+":"+String.valueOf(appStorage);
                 i++;
             } catch (IOException e) {
                 e.printStackTrace();
@@ -265,5 +361,4 @@ public class MainActivity extends AppCompatActivity {
         }
         return ss;
     }
-
 }
