@@ -2,6 +2,7 @@ package com.example.devicemonitor;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ActivityManager;
 import android.os.Bundle;
 import android.widget.TextView;
 
@@ -21,7 +22,7 @@ public class RamActivity extends AppCompatActivity {
         memInfo.setText(getRamInfo());
     }
 
-    private String getRamInfo(){
+    private String getRamInfo() {
         StringBuffer sb = new StringBuffer();
         String path = "/proc/meminfo";
         //sb.append("abi: ").append(Build.BOARD).append("\n");

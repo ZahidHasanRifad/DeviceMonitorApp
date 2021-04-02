@@ -3,6 +3,9 @@ package com.example.devicemonitor;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
+import android.annotation.SuppressLint;
+import android.app.usage.StorageStatsManager;
+import android.app.usage.UsageStatsManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -21,6 +24,7 @@ import android.widget.Toast;
 import com.example.devicemonitor.bgservice.DataReceiverService;
 import com.example.devicemonitor.bgservice.DataServerService;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -139,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra("cpus","");//value is a applist
         intent.putExtra("rams","");//value is a applist
         intent.putExtra("nets","");//value is a applist
-        intent.putExtra("storages","");//value is a applist
+        intent.putExtra("storages",getStorageStats());//value is a applist
         intent.putExtra("batterys","");
         intent.putExtra("activetimes","");
         intent.putExtra("totalpermisstion",getAppsGrantedTotalPermission());
@@ -155,6 +159,7 @@ public class MainActivity extends AppCompatActivity {
         //Intent intent = new Intent(this, MonitoringService1.class);
         unbindService(connection);
         isSeviceBound = false;
+
         //stopService(intent);
     }
 
@@ -240,6 +245,25 @@ public class MainActivity extends AppCompatActivity {
             i++;
         }
         return icp;
+    }
+
+    private String[] getStorageStats(){
+        List<ApplicationInfo> apps = getUserInstalledApps();
+        String[] ss = new String[apps.size()];
+        // UsageStatsManager usageStatsManager = (UsageStatsManager) getSystemService("usagestats");
+        StorageStatsManager storageStatsManager = (StorageStatsManager) getSystemService(STORAGE_STATS_SERVICE);
+        int i = 0;
+        for (ApplicationInfo app : apps){
+            try {
+                Long appStorage = storageStatsManager.getTotalBytes(app.storageUuid);
+                appStorage = appStorage/(1024*1024);
+                ss[i] = app.name+":"+String.valueOf(appStorage);
+                i++;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return ss;
     }
 
 }
