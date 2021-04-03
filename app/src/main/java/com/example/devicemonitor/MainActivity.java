@@ -145,18 +145,18 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, DataServerService.class);
         intent.putExtra("deviceId", generateDeviceId());
         intent.putExtra("numapps", getNumberOfTotalApp());
-//        intent.putExtra("apps",getAppsName()); // value is installed applist name only
-//        intent.putExtra("cpus","");//value is a applist
-//        intent.putExtra("rams","");//value is a applist
-//        intent.putExtra("nets","");//value is a applist
-//        intent.putExtra("storages",getStorageStats());//value is a applist
-//        intent.putExtra("batterys","");
-//        intent.putExtra("activetimes","");
-//        intent.putExtra("totalpermisstion",getAppsGrantedTotalPermission());
-//        intent.putExtra("camerapermission",isPermissionOn("CAMERA"));
-//        intent.putExtra("microphonepermission",isPermissionOn("RECORD_AUDIO"));
-//        intent.putExtra("storagepermissionRead",isPermissionOn("READ_EXTERNAL_STORAGE"));
-//        intent.putExtra("storagepermissionWrite",isPermissionOn("WRITE_EXTERNAL_STORAGE"));
+        intent.putExtra("apps",getAppsName()); // value is installed applist name only
+        intent.putExtra("cpus","");//value is a applist
+        intent.putExtra("rams","");//value is a applist
+        intent.putExtra("nets","");//value is a applist
+        intent.putExtra("storages",getStorageStats());//value is a applist
+        intent.putExtra("batterys","");
+        intent.putExtra("activetimes","");
+        intent.putExtra("totalpermisstion",getAppsGrantedTotalPermission());
+        intent.putExtra("camerapermission",isPermissionOn("CAMERA"));
+        intent.putExtra("microphonepermission",isPermissionOn("RECORD_AUDIO"));
+        intent.putExtra("storagepermissionRead",isPermissionOn("READ_EXTERNAL_STORAGE"));
+        intent.putExtra("storagepermissionWrite",isPermissionOn("WRITE_EXTERNAL_STORAGE"));
         bindService(intent,connection, Context.BIND_AUTO_CREATE);
         //startService(intent);
     }
@@ -279,17 +279,17 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-//    private String[] getAppsName(){
-//        String[] appsName = new String[getUserInstalledApps().size()];
-//        int i = 0;
-//        for (ApplicationInfo app : getUserInstalledApps()){
-//            appsName[i] = getAppName(app);
-//            i++;
-//        }
-//        return appsName;
-//    }
+    private String[] getAppsName(){
+        String[] appsName = new String[getUserInstalledAppsAsPackage().size()];
+        int i = 0;
+        for (PackageInfo app : getUserInstalledAppsAsPackage()){
+            appsName[i] = getAppName(app);
+            i++;
+        }
+        return appsName;
+    }
 
-    private String getAppName(ApplicationInfo app){
+    private String getAppName(PackageInfo app){
         String name = app.packageName;
 //        String[] packageName = app.processName.split(".");
 //        name = packageName[packageName.length-1];
@@ -316,10 +316,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private String[] getAppsGrantedTotalPermission(){
-        List<ApplicationInfo> applicationInfos = getUserInstalledAppsAsApplication();
-        String[] agtp = new String[applicationInfos.size()];
+        List<PackageInfo> apps = getUserInstalledAppsAsPackage();
+        String[] agtp = new String[apps.size()];
         int i = 0;
-        for (ApplicationInfo app : applicationInfos){
+        for (PackageInfo app : apps){
                 List<String> granted = getAppGrantedPermission(app.packageName);
                 agtp[i] = getAppName(app)+":"+String.valueOf(granted.size());
             //System.out.println(app.processName);
@@ -330,10 +330,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private String[] isPermissionOn(String permission){
-        List<ApplicationInfo> apps = getUserInstalledAppsAsApplication();
+        List<PackageInfo> apps = getUserInstalledAppsAsPackage();
         String [] icp = new String[apps.size()];
         int i = 0;
-        for (ApplicationInfo app : apps){
+        for (PackageInfo app : apps){
             List<String> granted = getAppGrantedPermission(app.packageName);
             if (granted.contains(permission)){
                 icp[i] = getAppName(app)+":"+"1";
@@ -353,7 +353,7 @@ public class MainActivity extends AppCompatActivity {
             try {
                 Long appStorage = storageStatsManager.getTotalBytes(app.storageUuid);
                 appStorage /= (1024 * 1024);
-                ss[i] = getAppName(app)+":"+String.valueOf(appStorage);
+                ss[i] = app.packageName+":"+String.valueOf(appStorage);
                 i++;
             } catch (IOException e) {
                 e.printStackTrace();
