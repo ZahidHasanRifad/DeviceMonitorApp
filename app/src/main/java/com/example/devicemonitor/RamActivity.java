@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ActivityManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.widget.TextView;
 
 import java.io.BufferedReader;
@@ -19,7 +20,14 @@ public class RamActivity extends AppCompatActivity {
         setContentView(R.layout.activity_ram);
 
         TextView memInfo = findViewById(R.id.memInfo);
-        //memInfo.setText(getRamInfo());
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                memInfo.setText(getRamInfo());
+            }
+        },1000);
+
     }
 
     private StringBuffer getRamInfo() {

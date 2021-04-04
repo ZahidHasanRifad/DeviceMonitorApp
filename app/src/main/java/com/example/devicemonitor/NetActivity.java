@@ -30,12 +30,23 @@ public class NetActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_net);
 
-        TextView netInfo = findViewById(R.id.netInfo);
-        //load();
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
-        //WifiManager wifiMgr = (WifiManager) getSystemService(WIFI_SERVICE);
+        WifiManager wifiMgr = (WifiManager) getSystemService(WIFI_SERVICE);
 
-        netInfo.setText(getStatus(connectivityManager));
+        TextView status = findViewById(R.id.statusv);
+        TextView nettypetxt = findViewById(R.id.nettypet);
+        TextView nettypevalue = findViewById(R.id.nettypev);
+        TextView iptxt = findViewById(R.id.ipt);
+        TextView ipvalue = findViewById(R.id.ipv);
+
+        if (isNetworkAvailable(this)){
+            status.setText("CONNECTED");
+            nettypetxt.setText("Network Type");
+            nettypevalue.setText(getNetType(connectivityManager));
+            iptxt.setText("IP Address");
+            ipvalue.setText(getWifiIPAddress(wifiMgr));
+        }else status.setText("NOT CONNECTED");
+
     }
 
     private String getnetInfo(){
@@ -86,14 +97,13 @@ public class NetActivity extends AppCompatActivity {
         return inetAddresses.contains(addr);
     }
 
-    private String getStatus(ConnectivityManager connectivityManager){
+    private boolean getStatus(ConnectivityManager connectivityManager){
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         if (networkInfo.isAvailable())
-            return networkInfo.getState().toString();
-        else return "NOT CONNECTED";
-        //return networkInfo.getTypeName()
-
+            return true;
+        else return false;
     }
+
     private String getNetType(ConnectivityManager connectivityManager){
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         return networkInfo.getTypeName();
