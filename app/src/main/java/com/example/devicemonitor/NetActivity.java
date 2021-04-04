@@ -7,16 +7,20 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkInfo;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.text.format.Formatter;
 import android.util.Log;
 import android.widget.TextView;
 
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
-import java.net.SocketException;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.LinkedList;
+import java.util.List;
 
 public class NetActivity extends AppCompatActivity {
 
@@ -28,7 +32,10 @@ public class NetActivity extends AppCompatActivity {
 
         TextView netInfo = findViewById(R.id.netInfo);
         //load();
-        netInfo.setText(getIP());
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+        //WifiManager wifiMgr = (WifiManager) getSystemService(WIFI_SERVICE);
+
+        netInfo.setText(getStatus(connectivityManager));
     }
 
     private String getnetInfo(){
@@ -79,14 +86,39 @@ public class NetActivity extends AppCompatActivity {
         return inetAddresses.contains(addr);
     }
 
-    private String getIP(){
-        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
-
-        Network network = connectivityManager.getActiveNetwork();
+    private String getStatus(ConnectivityManager connectivityManager){
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-        return networkInfo.getState().toString();
-        //return networkInfo.getTypeName();
-        
+        if (networkInfo.isAvailable())
+            return networkInfo.getState().toString();
+        else return "NOT CONNECTED";
+        //return networkInfo.getTypeName()
 
     }
+    private String getNetType(ConnectivityManager connectivityManager){
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        return networkInfo.getTypeName();
+    }
+
+    public String getWifiIPAddress(WifiManager wifiMgr) {
+
+        WifiInfo wifiInfo = wifiMgr.getConnectionInfo();
+        int ip = wifiInfo.getIpAddress();
+        return  Formatter.formatIpAddress(ip);
+    }
+
+    public static String getMobileIPAddress() {
+        try {
+            List<NetworkInterface> interfaces = Collections.list(NetworkInterface.getNetworkInterfaces());
+            for (NetworkInterface intf : interfaces) {
+                List<InetAddress> addrs = Collections.list(intf.getInetAddresses());
+                for (InetAddress addr : addrs) {
+                    if (!addr.isLoopbackAddress()) {
+                        return  addr.getHostAddress();
+                    }
+                }
+            }
+        } catch (Exception ex) { } // for now eat exceptions
+        return "";
+    }
+
 }

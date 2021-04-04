@@ -1,5 +1,6 @@
 package com.example.devicemonitor.bgservice;
 
+import android.app.AlarmManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -36,9 +37,9 @@ public class DataServerService extends Service {
     private final IBinder binder = new DataServerBinder();
     String value = null;
     MediaPlayer player;
-    String deviceDataUrl = "http://192.168.0.110:8000/server/addDevice";
-    String appDataUrl = "http://192.168.0.110:8000/server/addAppData";
-    String appPermissionStatsDataUrl = "http://192.168.0.110:8000/server/addAppPermissionStats";
+    String deviceDataUrl = "http://192.168.0.109:8000/server/addDevice/";
+    String appDataUrl = "http://192.168.0.109:8000/server/addAppData/";
+    String appPermissionStatsDataUrl = "http://192.168.0.109:8000/server/addAppPermissionStats/";
 
     /*@Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -97,7 +98,7 @@ public class DataServerService extends Service {
     private JSONObject sendData(String url, JSONObject data){
         //String serverUrl = "";
         RequestQueue requestQueue = Volley.newRequestQueue(this);
-        final JSONObject[] respnse = new JSONObject[1];
+        final JSONObject[] respnse = {new JSONObject()};
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, data, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -111,6 +112,7 @@ public class DataServerService extends Service {
         });
 
         requestQueue.add(jsonObjectRequest);
+        //requestQueue.start();
         return respnse[0];
     }
 
@@ -192,7 +194,11 @@ public class DataServerService extends Service {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        sendData(deviceDataUrl, deviceData);
+
+        //AlarmManager alarmManager = new AlarmManager();
+
+        //JSONObject rec = sendData(deviceDataUrl, deviceData);
+        //System.out.println(rec.toString());
 
         JSONObject appData = new JSONObject();
         try {
@@ -200,7 +206,7 @@ public class DataServerService extends Service {
             appData.put("app_name",appsName);
             appData.put("cpu_utilization","");
             appData.put("ram_utilization","");
-            appData.put("storage_utilization","");
+            appData.put("storage_utilization",storages);
             appData.put("net_utilization","");
             appData.put("battery_utilization","");
             appData.put("active_time","");
@@ -214,11 +220,11 @@ public class DataServerService extends Service {
         JSONObject appPermissionStatsData = new JSONObject();
         try {
             appPermissionStatsData.put("device", deviceData);
-            appPermissionStatsData.put("app_name","");
-            appPermissionStatsData.put("numof_granted_permissions","");
-            appPermissionStatsData.put("is_camera_prmsn_on","");
-            appPermissionStatsData.put("is_microphone_prmsn_on","");
-            appPermissionStatsData.put("is_storage_prmsn_on","");
+            appPermissionStatsData.put("app_name",appsName);
+            appPermissionStatsData.put("numof_granted_permissions",totalpermisstions);
+            appPermissionStatsData.put("is_camera_prmsn_on",camerapermissions);
+            appPermissionStatsData.put("is_microphone_prmsn_on",microphonepermissions);
+            appPermissionStatsData.put("is_storage_prmsn_on",storagePermissionValue(storagepermissionReads,storagepermissionWrites));
             appPermissionStatsData.put("data_update_time",LocalDateTime.now());
         } catch (JSONException e) {
             e.printStackTrace();
@@ -240,6 +246,45 @@ public class DataServerService extends Service {
         notificationManagerCompat.notify(notificationId, notificationBuilder.build());*/
         return binder;
     }
+
+    private JSONObject stringArrayToJson(String[] strArray){
+        JSONObject jsonObject = new JSONObject();
+        for (int i = 0; i<strArray.length; i++){
+            try {
+                jsonObject.put("app"+String.valueOf(i+1), strArray[i]);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return jsonObject;
+    }
+
+    private JSONObject extractValue(String[] strArray){
+        JSONObject jsonObject = new JSONObject();
+        for (int i = 0; i<strArray.length; i++){
+            String[] splitStr = strArray[i].split(":");
+            try {
+                jsonObject.put(splitStr[0],splitStr[1]);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return jsonObject;
+    }
+
+    private String[] storagePermissionValue(String[] read, String[] write){
+        String[] total = new String[read.length];
+        for (int i = 0; i<read.length; i++){
+            String[] rsplt = read[i].split(":");
+            String[] wsplt = write[i].split(":");
+            int value = Integer.parseInt(rsplt[1]) + Integer.parseInt(wsplt[1]);
+            total[i] = rsplt[0]+":"+String.valueOf(value);
+
+        }
+        return total;
+    }
+
+
 
     @Override
     public boolean onUnbind(Intent intent) {

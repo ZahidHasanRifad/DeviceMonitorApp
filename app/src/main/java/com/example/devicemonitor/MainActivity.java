@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
 import android.annotation.SuppressLint;
+import android.app.usage.StorageStats;
 import android.app.usage.StorageStatsManager;
 import android.app.usage.UsageStatsManager;
 import android.content.ComponentName;
@@ -15,21 +16,37 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.UserHandle;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.devicemonitor.bgservice.DataReceiverService;
 import com.example.devicemonitor.bgservice.DataServerService;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -41,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
     private DataServerService dataServerService;
     //private DataReceiverService dataReceiverService;
     boolean isSeviceBound = false;
+    String deviceDataUrl = "http://192.168.0.109:8000/server/addDevice/";
     //boolean dataReceiverBound = false;
 
     private ServiceConnection connection = new ServiceConnection() {
@@ -85,6 +103,9 @@ public class MainActivity extends AppCompatActivity {
         CardView memorybutton = findViewById(R.id.membutton);
         CardView netbutton = findViewById(R.id.networkbutton);
         CardView processbutton = findViewById(R.id.appsbutton);
+        CardView storagebutton = findViewById(R.id.storagebutton);
+        CardView batterybutton = findViewById(R.id.batterybutton);
+        CardView devicebutton = findViewById(R.id.devicebutton);
 
         Switch monitorSwitch = findViewById(R.id.monitorswitch);
 
@@ -92,6 +113,10 @@ public class MainActivity extends AppCompatActivity {
         Intent intentmem = new Intent(this, RamActivity.class);
         Intent intentnet = new Intent(this, NetActivity.class);
         Intent intentprocess = new Intent(this, ProcessActivity.class);
+        Intent intentstorage = new Intent(this, StorageActivity.class);
+        Intent intentbattery = new Intent(this, BatteryActivity.class);
+        Intent intentdevice = new Intent(this, DeviceActivity.class);
+
 
         //printApps(getUserInstalledApps());
         cpubutton.setOnClickListener(new View.OnClickListener() {
@@ -122,10 +147,44 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        storagebutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(intentstorage);
+            }
+        });
+
+        batterybutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(intentbattery);
+            }
+        });
+
+        devicebutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(intentdevice);
+            }
+        });
+
+
         monitorSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked == true){
+                    JSONObject deviceData = new JSONObject();
+                    //JSONArray deviceData = new JSONArray();
+                    try {
+                        deviceData.put("device_id", String.valueOf(generateDeviceId()));
+                        deviceData.put("total_apps",getNumberOfTotalApp());
+                        deviceData.put("registered_date", LocalDateTime.now());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    sendData(deviceDataUrl, deviceData);
+                    //sendDeviceData(deviceData);
                     launchMonitoringService();
                     if (isSeviceBound) {
                         String data = dataServerService.getData();
@@ -153,10 +212,10 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra("batterys","");
         intent.putExtra("activetimes","");
         intent.putExtra("totalpermisstion",getAppsGrantedTotalPermission());
-        intent.putExtra("camerapermission",isPermissionOn("CAMERA"));
-        intent.putExtra("microphonepermission",isPermissionOn("RECORD_AUDIO"));
-        intent.putExtra("storagepermissionRead",isPermissionOn("READ_EXTERNAL_STORAGE"));
-        intent.putExtra("storagepermissionWrite",isPermissionOn("WRITE_EXTERNAL_STORAGE"));
+        intent.putExtra("camerapermission",isPermissionOn("android.permission.CAMERA"));
+        intent.putExtra("microphonepermission",isPermissionOn("android.permission.RECORD_AUDIO"));
+        intent.putExtra("storagepermissionRead",isPermissionOn("android.permission.READ_EXTERNAL_STORAGE"));
+        intent.putExtra("storagepermissionWrite",isPermissionOn("android.permission.WRITE_EXTERNAL_STORAGE"));
         bindService(intent,connection, Context.BIND_AUTO_CREATE);
         //startService(intent);
     }
@@ -177,6 +236,64 @@ public class MainActivity extends AppCompatActivity {
         return deviceId;
     }
 
+    private JSONObject sendData(String url, JSONObject data){
+        //String serverUrl = "";
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        final JSONObject[] respnse = {new JSONObject()};
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, data, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                respnse[0] = response;
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Content-type", "application/json; charset=utf-8");
+                headers.put("User-agent", System.getProperty("http.agent"));
+                return headers;
+            }
+        };
+        requestQueue.add(jsonObjectRequest);
+        //requestQueue.start();
+        return respnse[0];
+    }
+
+    private String sendDeviceData(JSONArray jsonArray){
+        final String[] res = new String[1];
+
+        RequestQueue requestQueue = Volley.newRequestQueue(MainActivity.this);
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.POST, deviceDataUrl, jsonArray, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                try {
+                    res[0] = response.getString(0);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        }){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Content-type", "application/json; charset=utf-8");
+                headers.put("User-agent", System.getProperty("http.agent"));
+                return headers;
+            }
+        };
+        requestQueue.add(jsonArrayRequest);
+        return res[0];
+    }
 
     private int getNumberOfTotalApp(){
         int totalApp,tem;
@@ -265,7 +382,7 @@ public class MainActivity extends AppCompatActivity {
 //        System.out.println("////////////////////////////////////////////////////////");
         System.out.println(userAppsList.size());
         for (PackageInfo a : userAppsList){
-            System.out.println(a.packageName);
+            //System.out.println(a.packageName);
         }
         
         return userAppsList;
@@ -305,6 +422,7 @@ public class MainActivity extends AppCompatActivity {
                 for (int j = 0; j<packageInfo.requestedPermissions.length; j++){
                     if ((packageInfo.requestedPermissionsFlags[j] & PackageInfo.REQUESTED_PERMISSION_GRANTED)==PackageInfo.REQUESTED_PERMISSION_GRANTED){
                         granted.add(packageInfo.requestedPermissions[j]);
+                        //System.out.println(packageInfo.requestedPermissions[j]);
                     }
                 }
             }
@@ -351,8 +469,16 @@ public class MainActivity extends AppCompatActivity {
         int i = 0;
         for (ApplicationInfo app : apps){
             try {
-                Long appStorage = storageStatsManager.getTotalBytes(app.storageUuid);
+                Long appStorage  = storageStatsManager.getTotalBytes(app.storageUuid);
+//                try {
+//                    StorageStats storageStats = storageStatsManager.queryStatsForPackage(app.storageUuid, app.packageName, UserHandle.getUserHandleForUid(app.uid));
+//                    appStorage = storageStats.getAppBytes();
+//                } catch (PackageManager.NameNotFoundException e) {
+//                    e.printStackTrace();
+//                }
+
                 appStorage /= (1024 * 1024);
+                //System.out.println(app.packageName + " " + String.valueOf(appStorage));
                 ss[i] = app.packageName+":"+String.valueOf(appStorage);
                 i++;
             } catch (IOException e) {
